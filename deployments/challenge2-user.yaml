@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tripinsights-userjava-deployment
+  name: tripinsights-userprofile-deployment
   labels:
-    app: tripinsights-userjava
+    app: tripinsights-userprofile
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tripinsights-userjava
+      app: tripinsights-userprofile
   template:
     metadata:
       labels:
-        app: tripinsights-userjava
+        app: tripinsights-userprofile
     spec:
       volumes:
       - name: secrets
         secret:
           secretName: sql-secrets
       containers:
-      - name: tripinsights-userjava
-        image: registryztd0636.azurecr.io/tripinsights/userjava:1.0
+      - name: tripinsights-userprofile
+        image: registryztd0636.azurecr.io/tripinsights/userprofile:1.0
         ports:
         - containerPort: 80
         volumeMounts:
@@ -32,12 +32,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: tripinsights-userjava
-  name: tripinsights-userjava-service
+    app: tripinsights-userprofile
+  name: tripinsights-userprofile-service
 spec:
   ports:
     - port: 80
       protocol: TCP
       targetPort: 80
   selector:
-    app: tripinsights-userjava
+    app: tripinsights-userprofile

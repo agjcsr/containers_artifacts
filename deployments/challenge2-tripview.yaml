@@ -5,7 +5,7 @@ metadata:
   labels:
     app: tripinsights-tripviewer
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: tripinsights-tripviewer
@@ -19,6 +19,11 @@ spec:
           image: registryztd0636.azurecr.io/tripinsights/tripviewer:1.0
           ports:
           - containerPort: 80
+          env:
+          - name: TRIPS_API_ENDPOINT
+            value: http://tripinsights-trips-service
+          - name: USERPROFILE_API_ENDPOINT
+            value: http://tripinsights-userprofile-service
 ---
 apiVersion: v1
 kind: Service
