@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: web
   name: tripinsights-tripviewer-deployment
   labels:
     app: tripinsights-tripviewer
@@ -21,13 +22,14 @@ spec:
           - containerPort: 80
           env:
           - name: TRIPS_API_ENDPOINT
-            value: http://tripinsights-trips-service
+            value: http://tripinsights-trips-service.api
           - name: USERPROFILE_API_ENDPOINT
-            value: http://tripinsights-userprofile-service
+            value: http://tripinsights-userprofile-service.api
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: web
   labels:
     app: tripinsights-tripviewer
   name: tripinsights-tripviewer-loadbalancer

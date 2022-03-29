@@ -1,6 +1,6 @@
 # Execute these from tripinsights-tripviewer-deployment
 
 curl http://tripinsights-poi-service/api/poi
-curl http://tripinsights-user-service/api/user
+curl http://tripinsights-userprofile-service/api/user
 curl http://tripinsights-userjava-service/api/user-java/healthcheck
 curl http://tripinsights-trips-service/api/trips
