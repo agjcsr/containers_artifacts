@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tripinsights-trips-deployment
+  labels:
+    app: tripinsights-trips
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tripinsights-trips
+  template:
+    metadata:
+      labels:
+        app: tripinsights-trips
+    spec:
+      volumes:
+      - name: secrets
+        secret:
+          secretName: sql-secrets
+      containers:
+      - name: tripinsights-trips
+        image: registryztd0636.azurecr.io/tripinsights/trips:1.0
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: secrets
+          readOnly: true
+          mountPath: "/secrets"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: tripinsights-trips
+  name: tripinsights-trips-service
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: tripinsights-trips

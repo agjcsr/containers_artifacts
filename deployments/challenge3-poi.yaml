@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tripinsights-poi-deployment
+  labels:
+    app: tripinsights-poi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tripinsights-poi
+  template:
+    metadata:
+      labels:
+        app: tripinsights-poi
+    spec:
+      volumes:
+      - name: secrets
+        secret:
+          secretName: sql-secrets
+      containers:
+      - name: tripinsights-poi
+        image: registryztd0636.azurecr.io/tripinsights/poi:1.0
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: secrets
+          readOnly: true
+          mountPath: "/secrets"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: tripinsights-poi
+  name: tripinsights-poi-service
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: tripinsights-poi

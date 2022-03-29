@@ -1,0 +1,85 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tripinsights-ingress
+spec:
+  defaultBackend:
+    service:
+      name: tripinsights-tripviewer-service
+      port:
+        number: 80
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /api/user
+        backend:
+          service:
+            name: tripinsights-userprofile-service
+            port:
+              number: 80
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /api/user-java
+        backend:
+          service:
+            name: tripinsights-userjava-service
+            port:
+              number: 80
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /api/trips
+        backend:
+          service:
+            name: tripinsights-trips-service
+            port:
+              number: 80
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /api/poi
+        backend:
+          service:
+            name: tripinsights-poi-service
+            port:
+              number: 80
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: tripinsights-tripviewer-service
+            port:
+              number: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: tripinsights-tripviewer-ingress
+  name: tripinsights-tripviewer-ingress
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: tripinsights-ingress
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: tripinsights-tripviewer
+  name: tripinsights-tripviewer-service
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: tripinsights-tripviewer

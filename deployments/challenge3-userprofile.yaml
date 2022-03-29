@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tripinsights-userprofile-deployment
+  labels:
+    app: tripinsights-userprofile
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tripinsights-userprofile
+  template:
+    metadata:
+      labels:
+        app: tripinsights-userprofile
+    spec:
+      volumes:
+      - name: secrets
+        secret:
+          secretName: sql-secrets
+      containers:
+      - name: tripinsights-userprofile
+        image: registryztd0636.azurecr.io/tripinsights/userprofile:1.0
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: secrets
+          readOnly: true
+          mountPath: "/secrets"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: tripinsights-userprofile
+  name: tripinsights-userprofile-service
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: tripinsights-userprofile
