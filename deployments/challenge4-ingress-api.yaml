@@ -1,0 +1,52 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  # Make sure the correct namespace is chosen. This must correspond to where the service endpoints are
+  namespace: api
+  name: tripinsights-ingress-api
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # No need to put any rewrite rules in for this scenario
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        # Match the path
+        path: /api/user
+        backend:
+          service:
+            # Route to the correct backend service
+            name: tripinsights-userprofile-service
+            port:
+              number: 80
+  - http:
+      paths:
+      - pathType: Prefix
+        # Match the path
+        path: /api/user-java
+        backend:
+          service:
+            # Route to the correct backend service
+            name: tripinsights-userjava-service
+            port:
+              number: 80
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /api/trips
+        backend:
+          service:
+            name: tripinsights-trips-service
+            port:
+              number: 80
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /api/poi
+        backend:
+          service:
+            name: tripinsights-poi-service
+            port:
+              number: 80
