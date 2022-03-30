@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: api
   name: tripinsights-poi-deployment
   labels:
     app: tripinsights-poi
@@ -16,23 +15,25 @@ spec:
         app: tripinsights-poi
     spec:
       volumes:
-      - name: secrets
-        secret:
-          secretName: sql-secrets
+      - name: secrets-store01-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "azure-kvname-system-msi"
       containers:
       - name: tripinsights-poi
         image: registryztd0636.azurecr.io/tripinsights/poi:1.0
         ports:
         - containerPort: 80
         volumeMounts:
-        - name: secrets
+        - name: secrets-store01-inline
+          mountPath: "/mnt/secrets-store"
           readOnly: true
-          mountPath: "/secrets"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: api
   labels:
     app: tripinsights-poi
   name: tripinsights-poi-service
